@@ -1,7 +1,6 @@
 from typing import List, Callable, Tuple, SupportsIndex
 from abc import ABC, abstractmethod
 import random
-from collections import defaultdict
 
 
 class SortingAlgorithm[T](ABC):
@@ -181,7 +180,7 @@ def get_lis(arr: List[int]) -> Tuple[List[bool], int]:
         idx = lis[idx][1]
     return bool_lis, max_len
 
-class MinSort(SortingAlgorithm):
+class LisSort(SortingAlgorithm):
 
     def find_in_arr(self, arr: List[Tuple[int, int]], x: Tuple[int, int]) -> int:
         for i, ele in enumerate(arr):
@@ -245,22 +244,26 @@ def swap_cost(i: int, j: int) -> float:
 if __name__ == "__main__":
     random.seed(1)
     trials = 20 # per algorithm, per array length
-    length = 500 # max array length
+    length = 10 ** 6 # max array length
+    lengths = [10, 50, 100, 500, 1000, 5000, 10000]
     algorithms = [
         BubbleSort("bubble", swap_cost, extract_cost, insert_cost),
         SelectionSort("selection", swap_cost, extract_cost, insert_cost),
         InsertionSort("insertion", swap_cost, extract_cost, insert_cost),
         QuickSort("quick", swap_cost, extract_cost, insert_cost),
-        ShadowSort("shadow", swap_cost, extract_cost, insert_cost),
+        # ShadowSort("shadow", swap_cost, extract_cost, insert_cost),
         # DescSort("desc", swap_cost, extract_cost, insert_cost),
-        MaxSort("max", swap_cost, extract_cost, insert_cost),
-        MinSort("min", swap_cost, extract_cost, insert_cost),
+        # MaxSort("max", swap_cost, extract_cost, insert_cost),
+        LisSort("LIS", swap_cost, extract_cost, insert_cost),
     ]
     with open('scores.csv', 'w') as f:
-        f.write('Algorithm,Length,Trial,Score\n')
+        f.write('Algorithm,Length,Trial,Cost\n')
         for algorithm in algorithms:
-            for arr_length in range(1, length + 1):
+            print(f"Running {algorithm.name}")
+            for arr_length in lengths:
+                print(f"Array length: {arr_length}")
                 for trial in range(1, trials + 1):
+                    print(f"Trial {trial}")
                     arr = [random.randint(1, arr_length) for _ in range(arr_length)]
                     # print(arr)
 
